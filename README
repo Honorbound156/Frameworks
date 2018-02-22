@@ -1,0 +1,46 @@
+/**
+ * Project Frameworks
+ * Graphical Problem Framing Software Solution
+ * 
+ * @author Hal M. Hattis
+ * @CSDirectedStudy
+ *
+ */
+
+FOR:2-1-2018
+ 
+Implement domains and shared phenomena. For each domain D, maintain collection of (references to) 
+phenomena of other domains that are shared with D. Allow users to add/delete domains and interfaces. 
+Domains may share phenomena if and only if they are connected by an interface.
+
+ 
+ FOR: 2-2-2018:
+*DONE Make Domains aware of other associated domains.
+*DONE Compile 2 lists of phenomena in domain, ones that are shared and ones that are not.
+*DONE Add the functionality to add and remove interfaces.
+*DONE Add functionality to automatically allow the problem frame to loop through all domains and determine whether or domains are associated.
+*DONE Make phenomena aware of their primary associated domain.
+*TODO Create GUI basics.
+*DONE Subclass Phenomena into event and state phenomena.
+
+*NEW! Examine current removal system and consider alternatives
+*NEW! GUI issues, wont allow me to use FX classes, following error:
+	Access restriction: The method 'Stage.setTitle(String)' is not API (restriction on required library 'C:\Program Files\Java\jre1.8.0_161\lib\ext\jfxrt.jar')
+*NOTE ^ Has been repaired. Dealt with this issue for about 2 hours. This was a library ordering in export outport issue
+*NEW Watched a number of tutorials on this JavaFX GUI Process
+
+
+*GUI Task Goals:
+*Button To Add Domain, Opens Dialogue Box asking for the parameters, sends to backend, creates
+*Button To Add Interface, draws line between two domain. Dialogue for phenomena.
+*Option in Domain to add phenomena of domain, either state or event phenomena, set by a switch
+
+FOR: 2-2-2018:
+*Make domains contain a list of references to interfaces, instead of domains.
+	The associated domains can be determined by examining the interfaces of a domain.
+*Interfaces should contain a list of phenomena, not a singular phenomenon.
+*Make the GUI have the functionality to create dragable domains. 
+	In the future, these should also be editable, i.e. name and phenomena and such
+*Make the GUI have the functionality to create interfaces between two domains, can be clicked
+	on to edit phenomena, and removed.
+	*Make GitHub Repository For Code
