@@ -31,16 +31,21 @@ Domains may share phenomena if and only if they are connected by an interface.
 
 
 *GUI Task Goals:
-*Button To Add Domain, Opens Dialogue Box asking for the parameters, sends to backend, creates
+*Button To Add Domain, Opens Dialogue Box asking for the parameters, sends to back-end, creates
 *Button To Add Interface, draws line between two domain. Dialogue for phenomena.
 *Option in Domain to add phenomena of domain, either state or event phenomena, set by a switch
 
-FOR: 2-2-2018:
-*Make domains contain a list of references to interfaces, instead of domains.
-	The associated domains can be determined by examining the interfaces of a domain.
-*Interfaces should contain a list of phenomena, not a singular phenomenon.
-*Make the GUI have the functionality to create dragable domains. 
+FOR: 2-22-2018:
+*DONE Make GitHub Repository For Code, and establish setup for home computer to interact therewith.
+		This took a bit of time, as I have never done this particular process on my primary device.
+*DONE Make domains contain a list of references to interfaces, instead of domains.
+		The associated domains can be determined by examining the interfaces of a domain.
+*DONE Interfaces should contain a list of phenomena, not a singular phenomenon.
+*DONE A domain should contain two lists of phenomena; those it owns, and those that are shared with it.
+*DONE Remove Unnecessary initialization size in domain phenomena lists. 
+*DONE Change the State/Event Phenomena segregation method in the domain class to return the ArrayLists.
+*Make the GUI have the functionality to create domains, identified as rectangles in the screen. 
 	In the future, these should also be editable, i.e. name and phenomena and such
 *Make the GUI have the functionality to create interfaces between two domains, can be clicked
 	on to edit phenomena, and removed.
-	*Make GitHub Repository For Code
+

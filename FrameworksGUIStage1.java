@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 
 public class FrameworksGUIStage1 extends Application implements EventHandler<ActionEvent> {
 
+	ProblemFrame problemFrame;
+	
 	Button button1;
 	Button button2;
 	Button button3;
@@ -26,6 +28,8 @@ public class FrameworksGUIStage1 extends Application implements EventHandler<Act
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Frameworks");
 
+		problemFrame = new ProblemFrame();
+		
 		button1 = new Button();
 		button2 = new Button();
 		button3 = new Button();

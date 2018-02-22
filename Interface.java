@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author Hal M. Hattis
  * @CSDirectedStudy
  *
- * Interface between two domains, related to a shared phenomenon.
+ * Interface between two domains, related to set of shared phenomenon.
  */
 public class Interface {
 
@@ -20,6 +20,7 @@ public class Interface {
 	}
 	
 	public Interface(Domain leftDomain, Domain rightDomain, ArrayList<Phenomenon> assocPhenomena){
+		this.domainOne = leftDomain;
 		this.domainTwo = rightDomain;
 		this.associatedPhenomena = assocPhenomena;
 	}

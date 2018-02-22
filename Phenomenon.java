@@ -43,4 +43,11 @@ public class Phenomenon {
 		this.name = nameToSet;
 	}
 	
+	public String getDomain() {
+		return this.associatedDomain;
+	}
+
+	public void setDomain(Domain domain) {
+		this.associatedDomain = domain;
+	}
 }
