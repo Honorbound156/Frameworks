@@ -12,18 +12,21 @@ import java.util.ArrayList;
 
 public class Domain {
 	
-	//Name of the domain.
+	//Name of the phenomena
 	String name;
+	
+	//Description of the domain
+	String description;
 	
 	/*This holds all associated Interfaces. 
 	 *Associated Domains can be determined by examining the other ends of these interfaces.
 	 */
 	ArrayList<Interface> associatedInterfaces;
 	
-	//This will hold both the state and event phenomena that the domain owns.
+	//This will hold both state and event phenomena owned by this domain
 	ArrayList<Phenomenon> associatedPhenomena;
 	
-	//These phenomena are those shared with this domain, owned by another domain.
+	//These phenomena are shared with other domains
 	//TODO These will need to be updated based on associated domains.
 	ArrayList<Phenomenon> sharedPhenomena;
 	
@@ -33,19 +36,18 @@ public class Domain {
 	public Domain(){
 		
 	}
-	
+
 	/*
-	 * Constructor that specifies the name of the domain
+	 * Constructor that specifies size of phenomena list and name of domain
+	 * @param int phenomenaCount, the number of associate phenomena of the Domain  
 	 */
 	public Domain(String nameOfDomain){
-		this.name = nameOfDomain;
-		this.associatedInterfaces = new ArrayList<Interfaces>();
 		this.associatedPhenomena = new ArrayList<Phenomenon>();
-		this.sharedPhenomena = new ArrayList<Phenomenon>();
+		this.name = nameOfDomain;
 	}
 
 	/**
-	 * Allow for the manual addition of a new phenomenon to a domain
+	 * Allow for the manual addition of a new owned phenomenon to a domain
 	 * @param phenomenon, the phenomenon to add to the domain
 	 */
 	public void addPhenomenon(Phenomenon phenomenon){
@@ -53,8 +55,8 @@ public class Domain {
 	}
 	
 	/**
-	 * Allow for the manual removal of a phenomenon from a domain
-	 * @param phenomenonToRemove, the phenomenon to remove from the domain
+	 * Allow for the manual removal of an owned phenomenon from a domain
+	 * @param phenomenonToRemove
 	 */
 	public void removePhenomenon(int phenomenonToRemove){
 		//TODO Improve mechanism for removing the desired phenomenon
@@ -62,7 +64,7 @@ public class Domain {
 	}
 	
 	/**
-	 * Allow for the manual addition of a new phenomenon to a domain
+	 * Allow for the manual addition of a new shared phenomenon to a domain
 	 * @param phenomenon, the phenomenon to add to the domain
 	 */
 	public void addSharedPhenomenon(Phenomenon phenomenon){
@@ -70,8 +72,8 @@ public class Domain {
 	}
 	
 	/**
-	 * Allow for the manual removal of a phenomenon from a domain
-	 * @param phenomenonToRemove, the phenomenon to remove from the domain
+	 * Allow for the manual removal of a shared phenomenon from a domain
+	 * @param phenomenonToRemove
 	 */
 	public void removeSharedPhenomenon(int phenomenonToRemove){
 		//TODO Improve mechanism for removing the desired phenomenon
@@ -79,54 +81,74 @@ public class Domain {
 	}
 	
 	/**
-	 * Allow for the manual addition of a new interface to a domain
-	 * @param interface, the interface to add to the domain
+	 * Allow for the manual addition of a new Interface to a domain
+	 * @param Interface, the Interface to add to the domain
 	 */
-	public void addInterface(Interface interface){
-		this.associatedInterfaces.add(interface);
+	public void addInterface(Interface interfaceToAdd){
+		this.associatedInterfaces.add(interfaceToAdd);
 	}
 	
 	/**
-	 * Allow for the manual removal of an interface from a domain
-	 * @param interfaceToRemove, the interface to remove from the domain
+	 * Allow for the manual removal of an Interface from a domain
+	 * @param InterfaceToRemove
 	 */
-	public void removeInterface(int interfaceToRemove){
-		//TODO Improve mechanism for removing the desired interface
-		this.associatedPhenomena.remove(interfaceToRemove);
+	public void removeInterface(int InterfaceToRemove){
+		//TODO Improve mechanism for removing the desired Interface
+		this.associatedInterfaces.remove(InterfaceToRemove);
 	}
 	
 	/**
-	 * This method recreates the individual list of State Phenomena from
-	 * the overall associated phenomena list.
+	 * Utility method to get the state phenomena of the domain.
+	 * @return ArrayList<StatePhenomenon>
 	 */
 	public ArrayList<StatePhenomenon> getStatePhenomena(){
-		
-		ArrayList<StatePhenomena> statePhenomenonList = new ArrayList<StatePhenomena>();
-		
-		for(Phenomenon phenomenon : associatedPhenomena){
-			if("StatePhenomenon".equals(phenomenon.getClass().getName())){
-				statePhenomenonList.add((StatePhenomenon)phenomenon);
+		ArrayList<StatePhenomenon> statePhenomena = new ArrayList<StatePhenomenon>();
+		for(Phenomenon phenomenon : this.associatedPhenomena){
+			if("StatePhenomenon".equals(phenomenon.getClass().toString())){
+				statePhenomena.add((StatePhenomenon)phenomenon);
 			}
-		}
+		}	
 		
-		return statePhenomenonList;
+		return statePhenomena;
 	}
-	
+
 	/**
-	 * This method recreates the individual list of Event Phenomena from
-	 * the overall associated phenomena list.
+	 * Utility method to get the event phenomena of the domain.
+	 * @return ArrayList<EventPhenomenon>
 	 */
 	public ArrayList<EventPhenomenon> getEventPhenomena(){
-		
-		ArrayList<EventPhenomena> eventPhenomenonList = new ArrayList<EventPhenomena>();
-		
-		for(Phenomenon phenomenon : associatedPhenomena){
-			if("EventPhenomenon".equals(phenomenon.getClass().getName())){
-				eventPhenomenonList.add((EventPhenomenon)phenomenon);
+		ArrayList<EventPhenomenon> eventPhenomena = new ArrayList<EventPhenomenon>();
+		for(Phenomenon phenomenon : this.associatedPhenomena){
+			if("EventPhenomenon".equals(phenomenon.getClass().toString())){
+				eventPhenomena.add((EventPhenomenon)phenomenon);
 			}
-		}
+		}	
 		
-		return eventPhenomenonList;
+		return eventPhenomena;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public ArrayList<Phenomenon> getPhenomena() {
+		return this.associatedPhenomena;
+	}
+
+	public void setPhenomena(ArrayList<Phenomenon> phenomena) {
+		this.associatedPhenomena = phenomena;
 	}
 	
 	public ArrayList<Phenomenon> getSharedPhenomena() {
@@ -137,21 +159,12 @@ public class Domain {
 		this.sharedPhenomena = sharedPhenomena;
 	}
 
-	public ArrayList<Phenomenon> getPhenomena() {
-		return this.associatedPhenomena;
+	public ArrayList<Interface> getAssociatedInterfaces() {
+		return associatedInterfaces;
 	}
 
-	public void setPhenomena(ArrayList<Phenomenon> phenomena) {
-		this.associatedPhenomena = phenomena;
+	public void setAssociatedInterfaces(ArrayList<Interface> associatedInterfaces) {
+		this.associatedInterfaces = associatedInterfaces;
 	}
 
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	
 }

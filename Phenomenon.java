@@ -8,15 +8,15 @@
  */
 public class Phenomenon {
 
-	/**
-	 * The name of the phenomenon
-	 */
+	
+	//The name of the phenomenon
 	String name;
 	
-	/**
-	 * The Domain of the phenomenon
-	 */
+	//The Domain of the phenomenon 
 	Domain associatedDomain;
+	
+	//A description of the phenomenon
+	String description;
 	
 	/**
 	 * Default Constructor
@@ -30,9 +30,10 @@ public class Phenomenon {
 	 * @param nameToSet, the name of the phenomenon
 	 * @param domain, the domain that the phenomena is associated with
 	 */
-	public Phenomenon(String nameToSet, Domain domain){
+	public Phenomenon(String nameToSet, Domain domain, String descriptionGiven){
 		this.name = nameToSet;	
 		this.associatedDomain = domain;
+		this.description = descriptionGiven;
 	}
 
 	public String getName() {
@@ -42,12 +43,21 @@ public class Phenomenon {
 	public void setName(String nameToSet) {
 		this.name = nameToSet;
 	}
-	
-	public String getDomain() {
-		return this.associatedDomain;
+
+	public Domain getAssociatedDomain() {
+		return associatedDomain;
 	}
 
-	public void setDomain(Domain domain) {
-		this.associatedDomain = domain;
+	public void setAssociatedDomain(Domain associatedDomain) {
+		this.associatedDomain = associatedDomain;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 }
