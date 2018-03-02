@@ -13,24 +13,52 @@ import java.util.ArrayList;
  */
 public class ProblemFrame {
 
-	//Phenomena in the Problem Frame will actually be within the domains, handled at a lower level.
+	//unused list of phenomena. These will actually be within the domains, handled at a lower level.
 	//ArrayList<Phenomenon> phenomena = new ArrayList<Phenomenon>();
 	ArrayList<Domain> domains = new ArrayList<Domain>();
 	ArrayList<Interface> interfaces = new ArrayList<Interface>();
+
+	String description;
 	
-	/**
-	 * Default Constructor
-	 */
 	public ProblemFrame(){
-		
+		this.domains.add(new Domain("MachineDomain"));
 	}
 	
-	/**
-	 * Constructor with arguments
-	 */
-	public ProblemFrame(ArrayList<Domain> domainsIn, ArrayList<Interface> interfacesIn){
+	public ProblemFrame(ArrayList<Domain> domainsIn, ArrayList<Interface> interfacesIn, String descriptionIn){
 		this.domains = domainsIn;
 		this.interfaces = interfacesIn;
+		this.description = descriptionIn;
+	}
+	/**
+	 * Search the phenomena lists of each domain and cross reference 
+	 * for interface necessary phenomenon based relationships between domains
+	 * Should be used to graphically represent the system.
+	 * Should populate interfaces in the problem frame.
+	 */
+	public ArrayList<Interface> scanForRelations(){
+		return interfaces;
+		
+		/**
+		ArrayList<Interface> associationInterfaces = new ArrayList<Interface>();
+		
+		for(Domain leftDomain : this.domains){
+			for(Domain rightDomain : this.domains){
+				if(!leftDomain.equals(rightDomain)){
+					//If the domains share a phenomena, create interface and return
+					for(Phenomenon leftPhenomenon : leftDomain.associatedPhenomena){
+						for(Phenomenon rightPhenomenon : rightDomain.associatedPhenomena){
+							if(leftDomain.equals(rightPhenomenon)){
+								Interface newInterface = new Interface(leftDomain, rightDomain, leftPhenomenon);
+								associationInterfaces.add(newInterface);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return associationInterfaces;
+		*/
 	}
 	
 	/**
@@ -55,7 +83,7 @@ public class ProblemFrame {
 	/**
 	 * 
 	 * Remove the interface between two domains, implying that their 
-	 * shared phenomena are no longer shared. Should throw warnings about disassociation of
+	 * shared phenomena have been somehow impeded. Should throw warnings about disassociation of
 	 * related phenomena between domains
 	 */
 	public void removeInterface(int indexOfInterfaceToRemove){
@@ -85,38 +113,5 @@ public class ProblemFrame {
 	public void setInterfaces(ArrayList<Interface> interfaces) {
 		this.interfaces = interfaces;
 	}
-	
-	/**
-	 * Search the phenomena lists of each domain and cross reference 
-	 * for interface necessary phenomenon based relationships between domains
-	 * Should be used to graphically represent the system.
-	 * Should populate interfaces in the problem frame.
-	 */
-	/**
-	public ArrayList<Interface> scanForRelations(){
-		return interfaces;
-		
-		/**
-		ArrayList<Interface> associationInterfaces = new ArrayList<Interface>();
-		
-		for(Domain leftDomain : this.domains){
-			for(Domain rightDomain : this.domains){
-				if(!leftDomain.equals(rightDomain)){
-					//If the domains share a phenomena, create interface and return
-					for(Phenomenon leftPhenomenon : leftDomain.associatedPhenomena){
-						for(Phenomenon rightPhenomenon : rightDomain.associatedPhenomena){
-							if(leftDomain.equals(rightPhenomenon)){
-								Interface newInterface = new Interface(leftDomain, rightDomain, leftPhenomenon);
-								associationInterfaces.add(newInterface);
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		return associationInterfaces;
-		*/
-	//)
 	
 }
