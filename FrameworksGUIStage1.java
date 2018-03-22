@@ -9,43 +9,67 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class FrameworksGUIStage1 extends Application implements EventHandler<ActionEvent> {
 
 	ProblemFrame problemFrame;
-	Button resetButton;
 
 	public static void main(String[] args) {
 		
 		/**Some basic functions:
-		 *A) Click once on domain to begin interface creation
-		 *B) Click again on a different domain to create an interface
-		 *C) This interface should be blank until it is clicked on to add detail
-		 *D) Double click on open space to create a new blank domain at that position
-		 *E) Double click on a domain or interface to edit it
-		 *F) This edit includes a great deal, examine photos in library
-		 *G) Click and drag domains to move them, any interface in between must render to move with them
-		 *H) This render should place the interface from the middle of the sidebar nearest each domain to the other
-		 *I) Ability to reset or erase problem frame
-		 *J) Save PF
-		 *K) Open PF
+		 Click once on open space to create domain (Primary for given, Secondary for designed).
+		 Click once (Primary) on domain to begin interface creation 
+		 Click again on a different domain to create an interface (Should generate a line to show this)
+		 This interface should be blank until it is clicked on to add detail
+		 Mouse over component to get component detail in lower bar
+		 Primary click on interface does nothing
+		 Secondary click opens edit/delete menu on Domain or Interfaces
+		 This edit includes a great deal, examine photos in library
+		 Click and drag (Primary or Secondary) domains to move them, any interface in between must render to move with them
+		 This render should place the interface from the middle of the side-bar nearest each domain to the other
+		 Ability to reset problem frame
+		 Compile Document? (This is the logic engine it seems for PFEdit)
+		 Save PF
+		 Open PF
+		 
+		//Set Up The Dialogs
+		//A) Reset Button is Clicked Dialog
+		//B) Domain is Clicked Dialog
+		//C) Interface is Clicked Dialog
+		//D) Save and Load Dialogs
+		//E) Compile Dialog
 		*/
 		launch(args);
 	}
@@ -69,134 +93,240 @@ public class FrameworksGUIStage1 extends Application implements EventHandler<Act
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Frameworks");
-
 		problemFrame = new ProblemFrame();
-		resetButton = new Button();
+		
+		//SET UP MENU BAR
+        //File menu
+        Menu fileMenu = new Menu("File");
+        MenuItem newFile = new MenuItem("New File");
+        newFile.setOnAction(e -> System.out.println("Create a new file..."));
+        fileMenu.getItems().add(newFile);
+        fileMenu.getItems().add(new MenuItem("Open XML File"));
+        fileMenu.getItems().add(new SeparatorMenuItem());
+        fileMenu.getItems().add(new MenuItem("Save (XML)"));
+        fileMenu.getItems().add(new MenuItem("Save As XML"));
+        fileMenu.getItems().add(new MenuItem("Save As Image"));
+        fileMenu.getItems().add(new MenuItem("Save As Text"));
+        fileMenu.getItems().add(new SeparatorMenuItem());
+        fileMenu.getItems().add(new MenuItem("Print Diagram"));
+        fileMenu.getItems().add(new SeparatorMenuItem());
+        fileMenu.getItems().add(new MenuItem("Exit"));
 
-		resetButton.setText("Erase Diagram");
+        //Edit menu
+        Menu toolsMenu = new Menu("Tools");
+        toolsMenu.getItems().add(new MenuItem("Compile Document"));
+        toolsMenu.getItems().add(new MenuItem("Undo"));
+        toolsMenu.getItems().add(new MenuItem("Redo"));
+        toolsMenu.getItems().add(new SeparatorMenuItem());
+        toolsMenu.getItems().add(new MenuItem("Hide Context Description"));
+        toolsMenu.getItems().add(new MenuItem("Hide Component Details"));
+        toolsMenu.getItems().add(new MenuItem("Show/Hide Grid"));
+        toolsMenu.getItems().add(new MenuItem("Erase Diagram"));
+        toolsMenu.getItems().add(new SeparatorMenuItem());
+        toolsMenu.getItems().add(new MenuItem("Customize Toolbar"));
+        toolsMenu.getItems().add(new MenuItem("Lock Document"));
 
+        //Tools menu
+        Menu formatMenu = new Menu("Format");
+        MenuItem changeColor = new MenuItem("Change Color");
+        changeColor.setOnAction(e -> System.out.println("Change Color"));
+        changeColor.setDisable(true);
+        MenuItem changeFont = new MenuItem("Change Font");
+        changeFont.setOnAction(e -> System.out.println("Change Font"));
+        MenuItem changeSize = new MenuItem("Change Size");
+        changeSize.setOnAction(e -> System.out.println("Change Size"));
+        formatMenu.getItems().addAll(changeColor, changeFont, changeSize);
+        
+        //Help menu
+        Menu helpMenu = new Menu("Help");
+        helpMenu.getItems().add(new MenuItem("FrameWorks Help"));
+        helpMenu.getItems().add(new SeparatorMenuItem());
+        helpMenu.getItems().add(new MenuItem("Quick Start"));
+        helpMenu.getItems().add(new MenuItem("Turn On Tutorial"));
+        helpMenu.getItems().add(new SeparatorMenuItem());
+        helpMenu.getItems().add(new MenuItem("About Frameworks"));
+        helpMenu.getItems().add(new MenuItem("Keyboard Shortcuts"));
+
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().addAll(fileMenu, toolsMenu, formatMenu, helpMenu);
+		//END TOP MENU BAR
+        
+		//SET UP TOP BUTTON BAR
+		Button newButton = new Button("N");
+		Button openButton = new Button("O");
+		Button saveButton = new Button("S");
+		Button saveAsButton = new Button("SA");
+		Button printButton = new Button("P");
+		Button undoButton = new Button("U");
+		Button redoButton = new Button("RE");
+		Button compileButton = new Button("C");
+		Button resetButton = new Button("E");
+		Button helpButton = new Button("H");
+		Button quickStartButton = new Button("Q");
+		Button hideToolbarButton = new Button("HT");
+		newButton.setPrefSize(35, 35);
+		openButton.setPrefSize(35, 35);
+		saveButton.setPrefSize(35, 35);
+		saveAsButton.setPrefSize(35, 35);
+		printButton.setPrefSize(35, 35);
+		undoButton.setPrefSize(35, 35);
+		redoButton.setPrefSize(35, 35);
+		compileButton.setPrefSize(35, 35);
+		resetButton.setPrefSize(35, 35);
+		helpButton.setPrefSize(35, 35);
+		quickStartButton.setPrefSize(35, 35);
+		hideToolbarButton.setPrefSize(35, 35);
 		
-		//Set Up The Dialogs
-		//A) Reset Button is Clicked Dialog
-		//B) Domain is Clicked Dialog
+		newButton.setTooltip(new Tooltip("New Diagram"));
+		openButton.setTooltip(new Tooltip("Open Diagram"));
+		saveButton.setTooltip(new Tooltip("Save Diagram"));
+		saveAsButton.setTooltip(new Tooltip("Save Diagram As"));
+		printButton.setTooltip(new Tooltip("Print Diagram"));
+		undoButton.setTooltip(new Tooltip("Undo Last"));
+		redoButton.setTooltip(new Tooltip("Redo Last"));
+		compileButton.setTooltip(new Tooltip("Compile Document"));
+		resetButton.setTooltip(new Tooltip("Erase Diagram"));
+		helpButton.setTooltip(new Tooltip("Frameworks Help"));
+		quickStartButton.setTooltip(new Tooltip("Quick Start"));
+		hideToolbarButton.setTooltip(new Tooltip("Hide This Toolbar"));
 		
+		resetButton.setOnAction(e -> System.out.println("Reset the diagram"));
+		compileButton.setOnAction(e -> System.out.println("Compile the document"));
 		
+	    HBox buttonMenu = new HBox();
+	    buttonMenu.getChildren().addAll(newButton, openButton, saveButton, saveAsButton, printButton, undoButton,
+	    		redoButton, compileButton, resetButton, helpButton, quickStartButton, hideToolbarButton);
+	    buttonMenu.setSpacing(5);
+	    //END TOP BUTTON BAR
+	    
+	    //SET UP THE PRIMARY SANBOX AREA
+	    BorderPane mainLayout = new BorderPane();
+	    BorderPane topBarLayout = new BorderPane();
+	    GridPane domainSandboxLayout = new GridPane();
+	    topBarLayout.setTop(menuBar);
+	    topBarLayout.setCenter(buttonMenu);
+	    topBarLayout.setPrefSize(800, 65);
+	    
+        domainSandboxLayout.setGridLinesVisible(true);
+        final int numCols = 10 ;
+        final int numRows = 10 ;
+        for (int i = 0; i < numCols; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / numCols);
+            domainSandboxLayout.getColumnConstraints().add(colConst);
+        }
+        for (int i = 0; i < numRows; i++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / numRows);
+            domainSandboxLayout.getRowConstraints().add(rowConst);         
+        }
+        //END PRIMARY SANDBOX AREA
+	    
+        //SET UP BOTTOM PANE LAYOUT
+        BorderPane bottomContentLayout = new BorderPane();
+        TextField bottomTextRegion = new TextField();
+        TextField lastEventTextField = new TextField();
+        bottomTextRegion.setPrefSize(800, 100);
+        lastEventTextField.setPrefSize(800, 25);
+        bottomTextRegion.setText("This Text Will Change Based On The Context Of The Mouse In The Above Area");
+        lastEventTextField.setText("Last Event -> \"X\"");
+
+        bottomContentLayout.setTop(bottomTextRegion);
+        bottomContentLayout.setBottom(lastEventTextField);
+        //END BOTTOM PANE LAYOUT
+        
+        //SET APP LAYOUT
+		mainLayout.setTop(topBarLayout);
+		mainLayout.setCenter(domainSandboxLayout);
+		mainLayout.setBottom(bottomContentLayout);
+	    mainLayout.setPrefSize(800, 600);
+	    
+	    //FINISH AND DISPLAY
+		Scene scene = new Scene(mainLayout, 800, 600);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		
+		//SET UP DIALOGS
+		//CREATE DOMAIN DIALOG
 		TextInputDialog domainCreationDialog = new TextInputDialog("Domain X");
 		domainCreationDialog.setTitle("Domain Creation Dialogue");
 		domainCreationDialog.setHeaderText("Domain Creation Dialog");
 		domainCreationDialog.setContentText("Please enter domain name");
 
-		ChoiceDialog<String> interfaceCreationDialog = 
-				new ChoiceDialog<String>("Choose A Domain To Link Via Interface", getDomainsAsStringList());
-		
-		ChoiceDialog<String> remover = new ChoiceDialog<String>("Okay", "Cancel", "Okay");
-		remover.setHeaderText("Are You Sure You Want To Remove This?");
+		//REMOVE DOMAIN DIALOG
+		Alert removeDomainDialog = new Alert(AlertType.CONFIRMATION);
+		removeDomainDialog.setTitle("Remove Domain Dialog");
+		removeDomainDialog.setHeaderText("Remove Domain?");
+		removeDomainDialog.setContentText("Are You Sure You Want To Remove This Domain?");
 
-	   // HBox topMenu = new HBox();
-
-	    //topMenu.getChildren().addAll(button1, button2);
-	    
-		BorderPane layout = new BorderPane();
-		Pane pane1 = new Pane();
-		pane1.setLayoutX(100);
-		pane1.setLayoutY(100);
-	    layout.getChildren().add(pane1);
-		
-		Scene scene = new Scene(layout, 1000, 750);
-		
-		/*
-		scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
-
-			@Override
-			public void handle(MouseEvent click) {
-				
-				if(2 == click.getClickCount()){
-					//and not in any element, create new domain
-					//if in element, open edit menu for that element
-					System.out.println("DoubleClick: (" + click.getSceneX() + "," + click.getSceneY() + ")");
-				} else if(1 == click.getClickCount()){
-					System.out.println("SingleClick: (" + click.getSceneX() + "," + click.getSceneY() + ")");
-					//if inside a domain, start interface addition process
-					//else ignore
-				}
-				
-			}
-			
-		});
-		*/ 
-		scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
-
-		    @Override
-		    public void handle(MouseEvent mouseEvent) {
-		        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-		            if(mouseEvent.getClickCount() == 2){
-		                System.out.println("Double clicked");
-		            } else { 
-		            	System.out.println("Single Click");
-		            	Domain domainToAdd = new Domain("Domain A");
-		            	
-		            	problemFrame.addDomain(domainToAdd);
-		            	
-		            	System.out.println(problemFrame.getDomains());
-		            	
-		            	Pane newDomainPane = new Pane();
-		            	newDomainPane.setLayoutX(mouseEvent.getSceneX());
-		            	newDomainPane.setLayoutY(mouseEvent.getSceneY());
-		            	
-		            	layout.getChildren().add(newDomainPane);
-		            	System.out.println(layout.getChildren());
-		            	
-		            }
-		        }
-		    }
-			
-		});
-		
-		primaryStage.setScene(scene);
-		primaryStage.show();
-		
-		//Get the response Value
-		//Optional<String> result = dialog.showAndWait();
-		//result.ifPresent(name -> System.out.println("Name of Domain: " + name));
-		
-		
-	}
-
-	/**
-	@Override
-	public void handle(ActionEvent event) {
-
-		if(event.getEventType().getName().equals("MouseEvent")){
-			long currentTime = System.currentTimeMillis();
-			long diff = 0;
-			long lastTime = 0;
-			boolean doubleClicked = false;
-
-			if(lastTime!=0 && currentTime!=0){
-				diff=currentTime-lastTime;
-
-				if( diff<=500)
-					doubleClicked=true;
-				else
-					doubleClicked=false;
-			}
-
-			lastTime = currentTime;
-
-			System.out.println("Detected Double Click"); 
-
-			//Single Click Occurred, if it was on a domain, begin process to create interface between domains    
-			if(!doubleClicked){
-
-			} else {
-				Rectangle domain = new Rectangle(20, 40);
-
-				//this was a double click. If it was on an element, edit that element. If not, then create a new domain on the spot
-			}
+		Optional<ButtonType> removeResult = removeDomainDialog.showAndWait();
+		if (removeResult.get() == ButtonType.OK){
+		    // ... user chose OK
+		} else {
+		    // ... user chose CANCEL or closed the dialog
 		}
 		
+		//REMOVE INTERFACE DIALOG
+		Alert removeInterfaceDialog = new Alert(AlertType.CONFIRMATION);
+		removeInterfaceDialog.setTitle("Remove Interface Dialog");
+		removeInterfaceDialog.setHeaderText("Remove Interface?");
+		removeInterfaceDialog.setContentText("Are You Sure You Want To Remove This Interface?");
+
+		removeResult = removeInterfaceDialog.showAndWait();
+		if (removeResult.get() == ButtonType.OK){
+		    // ... user chose OK
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+		}
 		
-	}*/
+		//ADD PHENOMENON DIALOG
+		//ADD INTERFACE DIALOG
+		//DELETE PHENOMENON DIALOG
+		
+		//END DIALOG SETUP	
+		
+		//Temporary Changes for demo
+		quickStartButton.setOnAction(e -> {
+		
+			domainCreationDialog.showAndWait();
+		
+		});
+		
+		helpButton.setOnAction(e ->{
+			
+			removeDomainDialog.showAndWait();
+			
+		});
+		
+		hideToolbarButton.setOnAction(e -> {
+			
+			removeInterfaceDialog.showAndWait();
+			
+		});
+		
+		domainSandboxLayout.setOnMouseClicked( e -> {
+			double xOfClick = e.getSceneX();
+			double yOfClick = e.getSceneY();
+			
+			Pane domainPane = new Pane();
+			domainPane.setPrefSize(60, 40);
+			domainPane.setBackground(new Background(new BackgroundFill(Color.web("BLUE"), CornerRadii.EMPTY, Insets.EMPTY)));
+			
+			//domainSandboxLayout.add(domainPane, (int)xOfClick, (int)yOfClick);
+			domainSandboxLayout.add(domainPane, 1, 1);
+			
+			Optional<String> nameOfDomain = domainCreationDialog.showAndWait();
+			
+			Domain domainCreated = new Domain(nameOfDomain.toString());
+			
+			this.problemFrame.addDomain(domainCreated);
+			System.out.println("Problem Frame Domain List: ");
+			for(Domain domain : this.problemFrame.domains){
+				System.out.println(domain.getName());
+			}
+		});
+		
+	}
 
 	public void eraseProblemFrame(){
 		this.problemFrame = new ProblemFrame();
