@@ -11,22 +11,20 @@ import java.util.ArrayList;
  * composed of interacting domains, possessing phenomena, 
  * and connected via interfaces. 
  */
-public class ProblemFrame {
+public class ContextFrame {
 
 	//unused list of phenomena. These will actually be within the domains, handled at a lower level.
 	//ArrayList<Phenomenon> phenomena = new ArrayList<Phenomenon>();
 	ArrayList<Domain> domains = new ArrayList<Domain>();
 	ArrayList<Interface> interfaces = new ArrayList<Interface>();
-	ArrayList<Requirement> requirements = new ArrayList<Requirement>();
-	ArrayList<RequirementReference> requirementReferences = new ArrayList<RequirementReference>();
 
 	String description;
 	
-	public ProblemFrame(){
+	public ContextFrame(){
 		this.domains.add(new Domain("MachineDomain"));
 	}
 	
-	public ProblemFrame(ArrayList<Domain> domainsIn, ArrayList<Interface> interfacesIn, String descriptionIn){
+	public ContextFrame(ArrayList<Domain> domainsIn, ArrayList<Interface> interfacesIn, String descriptionIn){
 		this.domains = domainsIn;
 		this.interfaces = interfacesIn;
 		this.description = descriptionIn;
@@ -83,25 +81,6 @@ public class ProblemFrame {
 	}
 	
 	/**
-	 * Add a Requirement to the problem frame
-	 * TODO, consider running a "scanForRelations"
-	 * @param RequirementToAdd
-	 */
-	public void addRequirement(Requirement RequirementToAdd){
-		requirements.add(RequirementToAdd);
-	}
-	
-	/**
-	 * Remove a Requirement from the problem frame.
-	 * TODO, evaluate how this effects interfaces. 
-	 * Perhaps if a Requirement is removed, scan interfaces to adjust problem frame
-	 * @param RequirementToRemove, the Requirement being removed.
-	 */
-	public void removeRequirement(int RequirementToRemove){
-		requirements.remove(RequirementToRemove);
-	}
-	
-	/**
 	 * 
 	 * Remove the interface between two domains, implying that their 
 	 * shared phenomena have been somehow impeded. Should throw warnings about disassociation of
@@ -119,24 +98,6 @@ public class ProblemFrame {
 		this.interfaces.add(interfaceToAdd);
 	}
 
-	/**
-	 * 
-	 * Remove the RequirementReference between two domains, implying that their 
-	 * shared phenomena have been somehow impeded. Should throw warnings about disassociation of
-	 * related phenomena between domains
-	 */
-	public void removeRequirementReference(int indexOfRequirementReferenceToRemove){
-		this.requirementReferences.remove(indexOfRequirementReferenceToRemove);
-	}
-
-	/**
-	 * Add RequirementReference between two domains, implying a relationship of shared
-	 * phenomena between the domains
-	 */
-	public void addRequirementReference(RequirementReference RequirementReferenceToAdd){
-		this.requirementReferences.add(RequirementReferenceToAdd);
-	}
-	
 	public ArrayList<Domain> getDomains() {
 		return domains;
 	}
